@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             edit.apply();
             // 跳转main
             LoginActivity loginActivity = LoginActivity.this;
-            Intent intent = new Intent(loginActivity, MainActivity.class);
+            Intent intent = new Intent(loginActivity, MsgListActivity.class);
             startActivity(intent);
             // 结束当前activity
             loginActivity.finish();
