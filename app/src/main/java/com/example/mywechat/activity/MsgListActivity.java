@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -73,9 +74,15 @@ public class MsgListActivity extends AppCompatActivity {
         listView.setAdapter(messageAdapter);
         messageAdapter.notifyDataSetChanged();
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            TextView tvItem = view.findViewById(R.id.to_user);
-            Toast.makeText(MsgListActivity.this, "You clicked item " + tvItem.getText().toString(), Toast.LENGTH_SHORT).show();
+            TextView toUserTextView = view.findViewById(R.id.to_user);
+            String toUser = toUserTextView.getText().toString();
             // 点击跳转发送消息页面
+            MsgListActivity msgListActivity = MsgListActivity.this;
+            Intent intent = new Intent(msgListActivity, ChatActivity.class);
+            intent.putExtra("toUser", toUser);
+            startActivity(intent);
+            // 结束当前activity
+            msgListActivity.finish();
         });
     }
 }
