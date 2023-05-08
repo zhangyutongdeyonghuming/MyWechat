@@ -1,14 +1,12 @@
 package com.example.mywechat.activity;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +20,17 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         // 判断登录了就跳转到主页，基于SharedPreferences实现用户登录信息的获取 存储
         SharedPreferences loginInfo = getSharedPreferences("loginInfo", MODE_PRIVATE);
+        String login = loginInfo.getString("login", "0");
+        if (login.equals("1")) {
+            // 跳转main
+            LoginActivity loginActivity = LoginActivity.this;
+            Intent intent = new Intent(loginActivity, MsgListActivity.class);
+            startActivity(intent);
+            // 结束当前activity
+            loginActivity.finish();
+            return;
+        }
+
         SharedPreferences.Editor edit = loginInfo.edit();
         // 获取内容
         String username = loginInfo.getString("username", "");
@@ -36,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         if (!pwd.equals("")) {
             passwordText.setText(pwd);
         }
+        CheckBox checkBox = findViewById(R.id.checkBox);
         Button loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener((v) -> {
 
@@ -49,9 +59,15 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this,"请输入密码！",Toast.LENGTH_SHORT).show();
                 return;
             }
-            edit.putString("username", phone.toString());
             // 登陆成功，保存登录名密码
-            edit.putString("password", password.toString());
+            edit.putString("username", phone.toString());
+            // 记住密码
+            if (checkBox.isChecked()){
+                edit.putString("password", password.toString());
+            } else {
+                edit.remove("password");
+            }
+            edit.putString("login", "1");
             edit.apply();
             // 跳转main
             LoginActivity loginActivity = LoginActivity.this;

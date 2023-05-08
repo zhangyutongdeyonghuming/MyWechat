@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/cityNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/reportTimeValueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/dayWeatherTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Day Weather:" />
+
+    <TextView
+        android:id="@+id/nightWeatherTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Night Weather:" />
+
+    <TextView
+        android:id="@+id/dayTempTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Day Temperature:" />
+
+    <TextView
+        android:id="@+id/nightTempTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Night Temperature:" />
+
+    <TextView
+        android:id="@+id/dayWindTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Day Wind:" />
+
+    <TextView
+        android:id="@+id/nightWindTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Night Wind:" />
+
+    <TextView
+        android:id="@+id/dayPowerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Day Power:" />
+
+    <TextView
+        android:id="@+id/nightPowerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Night Power:" />
+
+</LinearLayout>

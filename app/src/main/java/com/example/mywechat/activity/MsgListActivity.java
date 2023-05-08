@@ -1,25 +1,23 @@
 package com.example.mywechat.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mywechat.R;
 import com.example.mywechat.adapter.MessageAdapter;
-import com.example.mywechat.db.DBHelper;
 import com.example.mywechat.entity.Message;
 
 import java.text.SimpleDateFormat;
@@ -33,19 +31,45 @@ public class MsgListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_msg_list);
-        // 创建数据库，添加数据
-        try (DBHelper dbHelper = new DBHelper(MsgListActivity.this)) {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put("from_user", "me");
-            values.put("to_user", "小张");
-            values.put("msg", "hello");
-            values.put("time", new Date().getTime());
-            values.put("to_user_avatar", "https://p3-passport.byteimg.com/img/user-avatar/91cdea559783d73168410d491d1e89aa~180x180.awebp");
-            db.insert("messages", null, values);
+        Button exitBtn = findViewById(R.id.btn_exit);
+        Log.d("MyApp", "msg activity");
+        exitBtn.setOnClickListener((v) -> {
+            Log.d("MyApp", "btn_exit clicked");
+            // 创建弹窗
+            AlertDialog.Builder builder = new AlertDialog.Builder(MsgListActivity.this);
+            builder.setTitle("确认退出登录？");
+            builder.setPositiveButton("确认", (dialog, which) -> {
+                // 退出登录
+                SharedPreferences loginInfo = getSharedPreferences("loginInfo", MODE_PRIVATE);
+                SharedPreferences.Editor edit = loginInfo.edit();
+                edit.putString("login", "0");
+                edit.apply();
+                // 跳转页面
+                Intent intent = new Intent(MsgListActivity.this, LoadingActivity.class);
+                startActivity(intent);
+                // 结束当前activity
+                MsgListActivity.this.finish();
+            });
+            // 显示弹窗
+            builder.show();
+        });
+        Button weatherBtn = findViewById(R.id.btn_weather);
+        weatherBtn.setOnClickListener((v) -> {
+            // 跳转天气页面
+            Intent intent = new Intent(MsgListActivity.this, WeatherActivity.class);
+            startActivity(intent);
+        });
+        refreshMessageList();
+    }
 
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshMessageList();
+    }
+
+    private void refreshMessageList() {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         // 查询回显
         SQLiteDatabase db = this.openOrCreateDatabase("msg.db", Context.MODE_PRIVATE, null);
         Cursor cursor = db.rawQuery("SELECT * FROM messages WHERE id IN (SELECT MAX(id) FROM messages GROUP BY to_user) ORDER BY time DESC", null);
@@ -63,8 +87,6 @@ public class MsgListActivity extends AppCompatActivity {
                 Message message = new Message(id, fromUser, toUser, msg, dateStr, toUserAvatar);
                 Log.v("msg", message.toString());
                 messages.add(message);
-
-
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -81,8 +103,6 @@ public class MsgListActivity extends AppCompatActivity {
             Intent intent = new Intent(msgListActivity, ChatActivity.class);
             intent.putExtra("toUser", toUser);
             startActivity(intent);
-            // 结束当前activity
-            msgListActivity.finish();
         });
     }
 }
